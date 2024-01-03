@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', credentialsId: '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', url: 'https://github.com/nithishparthipan/calculatorapp.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'echo "Running web application..."'
+                // No specific build commands provided, assuming the app runs directly via static files
+            }
+        }
+
+        stage('Create Docker Image') {
+            steps {
+                sh 'echo "Creating Docker image..."'
+                sh 'docker build -t calculator .'  // Building the Docker image with the web app files
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                sh 'echo "Pushing Docker image to Docker Hub..."'
+                sh 'docker login -u nithishparthipan2013@gmail.com -p Ni16@9yr99'  // Logging in to Docker Hub
+                sh 'docker tag calculator nithishparthipan2013@gmail.com/calculator:latest'  // Tagging the image
+                sh 'docker push nithishparthipan2013@gmail.com/calculator:latest'  // Pushing the image to Docker Hub
+            }
+        }
+    }
+}
+
